@@ -32,7 +32,6 @@ const LoginForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // authenticate(username, password);
         dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
         setUsername('');
         setPassword('');

@@ -1,33 +1,20 @@
-import React, {useState, createContext, useReducer, useEffect, Component} from "react";
-import {userReducer} from "../reducers/userReducer";
+import React, { createContext, useReducer, useEffect } from "react";
+import {authenticationReducer} from "../reducers/authenticationReducer";
 
 export const AppContext = createContext();
-
+const initialState = {
+    isAuth: false,
+}
 
 const AppContextProvider = props => {
-    // const [isAuth, setAuth] = useState(false);
-    const [state, dispatch] = useReducer(userReducer, {
-        isAuth: true,
+    const [state, dispatch] = useReducer(authenticationReducer, initialState, () => {
+        const localStorageData = localStorage.getItem('isAuth');
+            return localStorageData ? {isAuth: JSON.parse(localStorageData)} : initialState;
     });
 
-    // const authenticate = (username, password) => {
-    //     console.log('authenticate', username, password);
-    //     setAuth(true);
-    //     localStorage.setItem('isAuth', 'true');
-    // }
-    //
-    // const logout = () => {
-    //     if (localStorage.getItem('isAuth') === 'true') {
-    //         localStorage.removeItem('isAuth');
-    //     }
-    //
-    //     setAuth(false);
-    // }
-
-    // useEffect(() => {
-    //     localStorage.setItem('isAuth', JSON.stringify(isAuth));
-    // }, [isAuth])
-
+    useEffect(() => {
+        localStorage.setItem('isAuth', JSON.stringify(state.isAuth));
+    });
 
     return (
         <AppContext.Provider value={{state, dispatch}}>

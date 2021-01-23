@@ -32,6 +32,9 @@ const Header = () => {
     const loginUser = () => {
         dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
     }
+    const registerUser = () => {
+        // dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
+    }
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -56,7 +59,10 @@ const Header = () => {
 
                             </div>
                         ) :
-                        <MenuItem onClick={loginUser}>Login</MenuItem>
+                       <React.Fragment>
+                           <MenuItem onClick={registerUser}>Register</MenuItem>
+                           {/*<MenuItem onClick={loginUser}>Login</MenuItem>*/}
+                       </React.Fragment>
                     }
                 </Toolbar>
             </AppBar>

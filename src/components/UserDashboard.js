@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 
 const UserDashboard = () => {
     const classes = useStyles();
-    const {state} = useContext(AppContext);
+    const {isAuth} = useContext(AppContext);
 
     const [userInfo, setUserInfo] = useState([
         {
@@ -40,39 +40,38 @@ const UserDashboard = () => {
         }
     ]);
 
-    return state.isAuth ? (
-            <Container maxWidth="xl">
-                <TableContainer component={Paper}>
-                    <Table className={classes.table} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>FullName</StyledTableCell>
-                                <StyledTableCell align="right">Name</StyledTableCell>
-                                <StyledTableCell align="right">Surname</StyledTableCell>
-                                <StyledTableCell align="right">Age</StyledTableCell>
-                                <StyledTableCell align="right">Gender</StyledTableCell>
-                                <StyledTableCell align="right">Username</StyledTableCell>
+    return (
+        <Container maxWidth="xl">
+            <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>FullName</StyledTableCell>
+                            <StyledTableCell align="right">Name</StyledTableCell>
+                            <StyledTableCell align="right">Surname</StyledTableCell>
+                            <StyledTableCell align="right">Age</StyledTableCell>
+                            <StyledTableCell align="right">Gender</StyledTableCell>
+                            <StyledTableCell align="right">Username</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {userInfo.map((row) => (
+                            <TableRow key={row.name}>
+                                <TableCell component="th" scope="row">
+                                    {row.name + ' ' + row.surname}
+                                </TableCell>
+                                <TableCell align="right">{row.name || ' - '}</TableCell>
+                                <TableCell align="right">{row.surname || ' - '}</TableCell>
+                                <TableCell align="right">{row.age || ' - '}</TableCell>
+                                <TableCell align="right">{row.gender || ' - '}</TableCell>
+                                <TableCell align="right">{row.userName || ' - '}</TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {userInfo.map((row) => (
-                                <TableRow key={row.name}>
-                                    <TableCell component="th" scope="row">
-                                        {row.name + ' ' + row.surname}
-                                    </TableCell>
-                                    <TableCell align="right">{row.name || ' - '}</TableCell>
-                                    <TableCell align="right">{row.surname || ' - '}</TableCell>
-                                    <TableCell align="right">{row.age || ' - '}</TableCell>
-                                    <TableCell align="right">{row.gender || ' - '}</TableCell>
-                                    <TableCell align="right">{row.userName || ' - '}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Container>
-        ) :
-        '';
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Container>
+    )
 }
 
 
