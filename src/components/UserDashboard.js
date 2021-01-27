@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,7 +8,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
+import Loading from "./general-components/Loading";
 import {AppContext} from "../contexts/AppContext";
+import axios from "axios";
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -24,54 +26,69 @@ const useStyles = makeStyles({
     table: {
         minWidth: 650,
     },
+    containerClass: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+    }
 });
 
 const UserDashboard = () => {
     const classes = useStyles();
-    const {isAuth} = useContext(AppContext);
+    const {state, dispatch} = useContext(AppContext);
+    let [tableHeading, setTableHeading] = useState([]);
 
-    const [userInfo, setUserInfo] = useState([
-        {
-            name: 'Dea',
-            surname: 'Samniashvili',
-            age: 24,
-            gender: 'female',
-            userName: 'dsmn',
+
+    if(state.userInfo && state.userInfo.length > 0){
+        tableHeading = Object.keys(Object.assign({}, ...state.userInfo));
+    }
+
+
+    useEffect(() => {
+        if(!tableHeading || tableHeading.length === 0){
+            setTableHeading(tableHeading);
         }
-    ]);
+    }, []);
 
-    return (
-        <Container maxWidth="xl">
-            <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell>FullName</StyledTableCell>
-                            <StyledTableCell align="right">Name</StyledTableCell>
-                            <StyledTableCell align="right">Surname</StyledTableCell>
-                            <StyledTableCell align="right">Age</StyledTableCell>
-                            <StyledTableCell align="right">Gender</StyledTableCell>
-                            <StyledTableCell align="right">Username</StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {userInfo.map((row) => (
-                            <TableRow key={row.name}>
-                                <TableCell component="th" scope="row">
-                                    {row.name + ' ' + row.surname}
-                                </TableCell>
-                                <TableCell align="right">{row.name || ' - '}</TableCell>
-                                <TableCell align="right">{row.surname || ' - '}</TableCell>
-                                <TableCell align="right">{row.age || ' - '}</TableCell>
-                                <TableCell align="right">{row.gender || ' - '}</TableCell>
-                                <TableCell align="right">{row.userName || ' - '}</TableCell>
+
+    return state.loading ?
+        <Loading/> : (
+            <Container maxWidth="xl" className={classes.containerClass}>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                {
+                                    tableHeading.map(item => {
+                                        return <StyledTableCell>{item}</StyledTableCell>
+                                    })
+                                }
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Container>
-    )
+                        </TableHead>
+                        <TableBody>
+                            {
+                                state.userInfo &&
+                                Object.values(state.userInfo).map((row, index) => (
+                                    <TableRow>
+                                        {
+                                            Object.values(row).map(item => {
+                                                if(typeof item === 'object'){
+                                                    return  <TableCell>---</TableCell>
+                                                }
+                                                return <TableCell>{item}</TableCell>
+                                            })
+                                        }
+
+                                    </TableRow>
+                                ))
+                            }
+
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Container>
+        )
 }
 
 
