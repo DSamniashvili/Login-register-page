@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
         top: 'auto',
         bottom: 0,
     },
+    toolBaClass: {
+        textAlign: "center",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 }));
 
 export default function Footer() {
@@ -29,7 +35,7 @@ export default function Footer() {
     return (
         <div className={classes.root}>
             <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar>
+                <Toolbar className={classes.toolBaClass}>
                     <IconButton className={classes.menuButton} color="inherit" aria-label="copyright">
                         <CopyrightIcon/>
                     </IconButton>

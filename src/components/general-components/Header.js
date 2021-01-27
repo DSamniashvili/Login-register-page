@@ -12,6 +12,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        marginBottom: theme.spacing(10),
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -24,25 +25,20 @@ const useStyles = makeStyles((theme) => ({
 const Header = () => {
     const classes = useStyles();
     const {state, dispatch} = useContext(AppContext);
-
+    const {isAuth, loginInitials} = state;
 
     const logoutUser = () => {
         dispatch({type: 'LOGOUT_USER', payload: {isAuth: false}});
     }
-    const loginUser = () => {
-        dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
-    }
-    const registerUser = () => {
-        // dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
-    }
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h6" className={classes.title}>
-                        {state.isAuth ?
-                            'My Dashboard' :
-                            'Dataninja App'
+                        {isAuth ?
+                            `Hello, ${loginInitials.username.toUpperCase()} !` :
+                            'Welcome to Dataninja App!'
                         }
                     </Typography>
                     {state.isAuth ? (
@@ -59,10 +55,7 @@ const Header = () => {
 
                             </div>
                         ) :
-                       <React.Fragment>
-                           <MenuItem onClick={registerUser}>Register</MenuItem>
-                           {/*<MenuItem onClick={loginUser}>Login</MenuItem>*/}
-                       </React.Fragment>
+                        null
                     }
                 </Toolbar>
             </AppBar>

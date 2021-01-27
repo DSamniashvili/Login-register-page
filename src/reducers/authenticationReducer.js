@@ -17,17 +17,35 @@ export const authenticationReducer = (state, action) => {
                 ...state,
                 loading: false,
                 error: 'Something went wrong',
-                userInfo: {},
+                userInfo: [],
             }
         case "AUTHENTICATE_USER":
             return {
                 ...state,
                 isAuth: action.payload.isAuth,
             }
+            case "REGISTER_USER":
+            return {
+                ...state,
+                isRegistered: action.payload.isRegistered,
+                isAuth: action.payload.isRegistered,
+                loginInitials: {
+                    ...state.loginInitials
+                },
+            }
         case "LOGOUT_USER":
             return {
                 ...state,
                 isAuth: action.payload.isAuth,
+            }
+            case "SET_USER_INITIALS":
+            return {
+                ...state,
+                loginInitials: {
+                    ...state.loginInitials,
+                    username: action.payload.username,
+                    password: action.payload.password,
+                },
             }
         default:
             return state;

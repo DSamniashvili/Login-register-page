@@ -60,8 +60,8 @@ const UserDashboard = () => {
                         <TableHead>
                             <TableRow>
                                 {
-                                    tableHeading.map(item => {
-                                        return <StyledTableCell>{item}</StyledTableCell>
+                                    tableHeading.map((item, index) => {
+                                        return <StyledTableCell key={index}>{item}</StyledTableCell>
                                     })
                                 }
                             </TableRow>
@@ -70,13 +70,13 @@ const UserDashboard = () => {
                             {
                                 state.userInfo &&
                                 Object.values(state.userInfo).map((row, index) => (
-                                    <TableRow>
+                                    <TableRow key={index}>
                                         {
-                                            Object.values(row).map(item => {
+                                            Object.values(row).map((item, index) => {
                                                 if(typeof item === 'object'){
-                                                    return  <TableCell>---</TableCell>
+                                                    return  <TableCell key={index}>---</TableCell>
                                                 }
-                                                return <TableCell>{item}</TableCell>
+                                                return <TableCell key={index}>{item}</TableCell>
                                             })
                                         }
 

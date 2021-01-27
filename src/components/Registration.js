@@ -29,52 +29,74 @@ const useStyles = makeStyles((theme) => ({
     },
     errorMessageArea: {
         margin: theme.spacing(5),
+        marginBottom: 0,
     },
     buttonStyle: {
         margin: theme.spacing(2),
     }
 }));
 
-const LoginForm = () => {
+const Registration = () => {
     const classes = useStyles();
     const {state, dispatch} = useContext(AppContext);
 
 
-    const [inputUserName, setUsername] = useState('');
-    const [inputPassword, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [age, setAge] = useState(0);
+    const [gender, setGender] = useState('');
+    const [email, setEmail] = useState(false);
     const [isInvalid, setIsInvalid] = useState(false);
+    const [isInvalidEmail, setIsInvalidEmail] = useState(false);
+
+    const ValidateEmail = (email) => {
+        return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email);
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const {username, password} = state.loginInitials;
+        // if (!email || !ValidateEmail(email)) {
+        //     setIsInvalidEmail(true);
+        // }
 
-        if (!inputUserName || inputUserName.length === 0 || username !== inputUserName
-            || !inputPassword || inputPassword.length === 0 || password !== inputPassword) {
+        if (!username || !password) {
             setUsername('');
             setPassword('');
             setIsInvalid(true);
-            dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: false}});
+            dispatch({type: 'REGISTER_USER', payload: {isRegistered: false}});
         } else {
+            dispatch({type: 'REGISTER_USER', payload: {isRegistered: true}});
             dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
+            dispatch({type: 'SET_USER_INITIALS', payload: {username, password}});
             setUsername('');
             setPassword('');
+            setEmail('');
+            setAge('')
+            setGender('');
         }
     }
 
     return (
         <div className={classes.containerStyle}>
-            <form className={classes.root} noValidate autoComplete="off">
+            <form className={classes.root} autoComplete="off">
                 <TextField
                     error={isInvalid}
-                    value={inputUserName || ''}
+                    value={username || ''}
                     id="filled-basic"
                     label="name"
                     onChange={(e) => setUsername(e.target.value)}
                 />
+                <TextField
+                    error={isInvalidEmail}
+                    value={email || ''}
+                    id="filled-basic"
+                    label="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                />
                 <TextField id="filled-basic"
                            error={isInvalid}
-                           value={inputPassword || ''}
+                           value={password || ''}
                            label="password"
                            type={'password'}
                            onChange={(e) => setPassword(e.target.value)}
@@ -82,7 +104,7 @@ const LoginForm = () => {
 
                 <Button variant="contained" color="primary"
                         onClick={handleSubmit} className={classes.buttonStyle}>
-                    Login
+                    Register
                 </Button>
             </form>
 
@@ -93,9 +115,16 @@ const LoginForm = () => {
                     </div> :
                     null
             }
+            {
+                isInvalidEmail ?
+                    <div className={classes.errorMessageArea}>
+                        <Alert severity="error">Please provide correct email address.</Alert>
+                    </div> :
+                    null
+            }
 
         </div>
     );
 }
 
-export default LoginForm;
+export default Registration;
