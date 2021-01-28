@@ -1,13 +1,12 @@
 import React, {createContext, useReducer, useEffect} from "react";
 import {authenticationReducer} from "../reducers/authenticationReducer";
-import axios from "axios";
 
 export const AppContext = createContext();
 
 const initialState = {
     isAuth: false,
     isRegistered: false,
-    loading: true,
+    loading: false,
     error: '',
     userInfo: [],
     loginInitials: {},
@@ -20,6 +19,7 @@ const AppContextProvider = props => {
         const localStorageLoginInitials = localStorage.getItem('loginInitials');
 
         return localStorageData ? {
+            ...initialState,
             isAuth: JSON.parse(localStorageData),
             isRegistered: JSON.parse(localStorageDataRegistered),
             loginInitials: JSON.parse(localStorageLoginInitials),
@@ -31,18 +31,6 @@ const AppContextProvider = props => {
         localStorage.setItem('isRegistered', JSON.stringify(state.isRegistered));
         localStorage.setItem('loginInitials', JSON.stringify(state.loginInitials));
 
-        if (state.isAuth && (!state.userInfo || state.userInfo.length === 0)) {
-            dispatch({type: 'FETCH_PROCESSING', payload: {}})
-            axios.get('https://jsonplaceholder.typicode.com/users/')
-                .then(response => {
-                    setTimeout(() => {
-                        dispatch({type: 'FETCH_SUCCESS', payload: response.data})
-                    }, 300)
-                })
-                .catch(error => {
-                    dispatch({type: 'FETCH_ERROR', payload: 'Something went wrong'})
-                })
-        }
     });
 
     return (

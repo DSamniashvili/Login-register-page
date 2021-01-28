@@ -1,4 +1,4 @@
-import React, { useContext} from 'react';
+import React, {useContext} from 'react';
 import LoginPopup from "./LoginPopup";
 import UserDashboard from "./UserDashboard";
 import {AppContext} from "../contexts/AppContext";
@@ -9,10 +9,16 @@ const Container = () => {
     const {state} = useContext(AppContext);
 
     const renderContent = () => {
-        if (!state.isRegistered){
+        if (!state.isRegistered) {
             return <Registration/>;
-        } else if(state.isAuth){
-            return <UserDashboard1/>;
+        }
+        if (state.isAuth) {
+            return (
+                <React.Fragment>
+                    <UserDashboard1/>
+                    <UserDashboard/>
+                </React.Fragment>
+            )
         } else {
             return <LoginPopup/>;
         }

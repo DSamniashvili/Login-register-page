@@ -11,6 +11,7 @@ export const authenticationReducer = (state, action) => {
             return {
                 ...state,
                 loading: true,
+                userInfo: [],
             }
         case "FETCH_ERROR":
             return {

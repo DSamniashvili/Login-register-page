@@ -4,15 +4,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CopyrightIcon from '@material-ui/icons/Copyright';
-import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-    },
-    title: {
-        // flexGrow: 1,
+        marginTop: theme.spacing(10),
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -40,7 +37,7 @@ export default function Footer() {
                         <CopyrightIcon/>
                     </IconButton>
 
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6">
                        All rights reserved
                     </Typography>
                 </Toolbar>
