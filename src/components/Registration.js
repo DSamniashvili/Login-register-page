@@ -1,10 +1,15 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {AppContext} from '../contexts/AppContext';
 import MuiAlert from '@material-ui/lab/Alert';
-import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@material-ui/core";
+import {
+    FormControl, FormControlLabel, FormLabel,
+    InputLabel,
+    MenuItem, Radio, RadioGroup,
+    Select
+} from "@material-ui/core";
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -37,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
     formGenderStyle: {
         display: 'flex',
-        marginTop: 24,
+        // marginTop: 24,
     },
     genderLabelStyle: {
         display: 'flex',
@@ -49,6 +54,21 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+const selectGenders = [
+    {
+        value: "female",
+        label: "Female"
+    },
+    {
+        value: "male",
+        label: "Male"
+    },
+    {
+        value: "other",
+        label: "Other"
+    },
+];
+
 const Registration = () => {
     const classes = useStyles();
     const {state, dispatch} = useContext(AppContext);
@@ -56,7 +76,6 @@ const Registration = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [age, setAge] = useState(0);
     const [gender, setGender] = useState('');
     const [email, setEmail] = useState(false);
     const [isInvalid, setIsInvalid] = useState(false);
@@ -84,20 +103,15 @@ const Registration = () => {
             setUsername('');
             setPassword('');
             setEmail('');
-            setAge('')
             setGender('');
         }
     }
 
-    const CustomFormControlLabel = withStyles({
+    const CustomMenuItem = withStyles({
         root: {
-            color: '#757575',
-            '&$checked': {
-                color: '#757575',
-            },
+            color: '#303f9f',
         },
-        checked: {},
-    })((props) =>  <FormControlLabel {...props}/>);
+    })((props) => <MenuItem {...props}/>);
 
     const handleGenderChange = (event) => {
         setGender(event.target.value);
@@ -111,6 +125,7 @@ const Registration = () => {
                     value={username || ''}
                     id="filled-basic"
                     label="name"
+                    required
                     onChange={(e) => setUsername(e.target.value)}
                 />
                 <TextField
@@ -118,6 +133,7 @@ const Registration = () => {
                     value={email || ''}
                     id="filled-basic"
                     label="email"
+                    required
                     onChange={(e) => setEmail(e.target.value)}
                 />
                 <TextField id="filled-basic"
@@ -125,16 +141,23 @@ const Registration = () => {
                            value={password || ''}
                            label="password"
                            type={'password'}
+                           required
                            onChange={(e) => setPassword(e.target.value)}
                 />
-
-                <FormControl component="fieldset" className={classes.formGenderStyle}>
-                    <FormLabel component="legend" className={classes.genderLabelStyle}>Gender</FormLabel>
-                    <RadioGroup aria-label="gender" name="gender" value={gender} onChange={handleGenderChange}>
-                        <CustomFormControlLabel value="female" className={classes.genderOptionsStyle} control={<Radio color="primary"/>} label="Female"/>
-                        <CustomFormControlLabel value="male" className={classes.genderOptionsStyle} control={<Radio color="primary"/>} label="Male"/>
-                        <CustomFormControlLabel value="other" className={classes.genderOptionsStyle} control={<Radio color="primary"/>} label="Other"/>
-                    </RadioGroup>
+                <FormControl className={classes.formGenderStyle}>
+                    <InputLabel id="gender">Gender</InputLabel>
+                    <Select
+                        labelId="gender"
+                        id="gender"
+                        value={gender || ''}
+                        onChange={handleGenderChange}
+                    >
+                        {selectGenders.map(option => (
+                            <CustomMenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </CustomMenuItem>
+                        ))}
+                    </Select>
                 </FormControl>
 
                 <Button variant="contained" color="primary"

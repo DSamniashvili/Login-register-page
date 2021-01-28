@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     }
 });
 
-const UserDashboard = () => {
+const UserDashboard1 = () => {
     const classes = useStyles();
     const {state, dispatch} = useContext(AppContext);
     let [tableHeading, setTableHeading] = useState([]);
@@ -91,4 +91,4 @@ const UserDashboard = () => {
 }
 
 
-export default UserDashboard;
+export default UserDashboard1;

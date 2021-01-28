@@ -43,7 +43,6 @@ const AppContextProvider = props => {
                     dispatch({type: 'FETCH_ERROR', payload: 'Something went wrong'})
                 })
         }
-
     });
 
     return (

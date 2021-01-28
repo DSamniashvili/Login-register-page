@@ -37,7 +37,7 @@ const Header = () => {
                 <Toolbar>
                     <Typography variant="h6" className={classes.title}>
                         {isAuth ?
-                            `Hello, ${loginInitials.username.toUpperCase()} !` :
+                            `Welcome to your dashboard, ${loginInitials.username.toUpperCase()} !` :
                             'Welcome to Dataninja App!'
                         }
                     </Typography>
