@@ -12,6 +12,12 @@ import {
 } from "@material-ui/core";
 import Loading from "./general-components/Loading";
 
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('mySecretKey');
+
+const encryptedString = cryptr.encrypt('bacon');
+console.log('encryptedString', encryptedString);
+
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -82,18 +88,18 @@ const selectGenders = [
 
 const sendUserRegistration = ({dispatch}, {username, password}) => {
     let userRegistrationPromise = new Promise((resolve, reject) => {
-
+        const encryptedPassword = cryptr.encrypt(password);
         dispatch({type: 'SEND_REGISTER_USER', payload: {}});
 
         setTimeout(function () {
-            resolve('User registered successfully');
+            resolve(encryptedPassword);
             reject('Could not register user');
-        }, 1000)
+        }, 500)
     })
 
     userRegistrationPromise.then((response) => {
-        console.log("User registration response: " + response)
-        dispatch({type: 'SET_USER_INITIALS', payload: {username, password}});
+        console.log("User registration success");
+        dispatch({type: 'SET_USER_INITIALS', payload: {username, password: response}});
         dispatch({type: 'REGISTER_USER', payload: {isRegistered: true}});
     })
         .catch(err => {

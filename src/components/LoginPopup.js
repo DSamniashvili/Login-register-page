@@ -6,6 +6,9 @@ import {useAppContext} from '../contexts/AppContext';
 import MuiAlert from '@material-ui/lab/Alert';
 import Loading from "./general-components/Loading";
 
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('mySecretKey');
+
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -62,7 +65,8 @@ const LoginForm = () => {
     }
 
     const callToAuthenticate = ({inputUserName, inputPassword}) => {
-        const {username, password} = state.loginInitials;
+        let {username, password} = state.loginInitials;
+        password = cryptr.decrypt(password);
 
         let userLoginPromise = new Promise((resolve, reject) => {
 
@@ -74,7 +78,7 @@ const LoginForm = () => {
             }
             setTimeout(function () {
                 resolve('User authenticated successfully');
-            }, 1000);
+            }, 500);
         })
 
         userLoginPromise.then((response) => {
