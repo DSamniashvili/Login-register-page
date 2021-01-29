@@ -88,13 +88,17 @@ const selectGenders = [
 
 const sendUserRegistration = ({dispatch}, {username, password}) => {
     let userRegistrationPromise = new Promise((resolve, reject) => {
-        const encryptedPassword = cryptr.encrypt(password);
-        dispatch({type: 'SEND_REGISTER_USER', payload: {}});
 
-        setTimeout(function () {
-            resolve(encryptedPassword);
+        try {
+            dispatch({type: 'SEND_REGISTER_USER', payload: {}});
+            const encryptedPassword = cryptr.encrypt(password);
+
+            setTimeout(function () {
+                resolve(encryptedPassword);
+            }, 500)
+        } catch (err) {
             reject('Could not register user');
-        }, 500)
+        }
     })
 
     userRegistrationPromise.then((response) => {

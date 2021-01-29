@@ -68,14 +68,16 @@ const LoginForm = () => {
         let {username, password} = state.loginInitials;
         password = cryptr.decrypt(password);
 
-        let userLoginPromise = new Promise((resolve, reject) => {
+        const inValidUserName = !inputUserName || inputUserName.length === 0 || username !== inputUserName;
+        const inValidPassword = !inputPassword || inputPassword.length === 0 || password !== inputPassword;
 
+        let userLoginPromise = new Promise((resolve, reject) => {
             dispatch({type: 'SEND_AUTHENTICATE_USER', payload: {}});
 
-            if (!inputUserName || inputUserName.length === 0 || username !== inputUserName
-                || !inputPassword || inputPassword.length === 0 || password !== inputPassword) {
+            if (inValidUserName || inValidPassword) {
                 reject('Could not authenticate user');
             }
+
             setTimeout(function () {
                 resolve('User authenticated successfully');
             }, 500);
