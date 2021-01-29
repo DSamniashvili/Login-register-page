@@ -1,0 +1,10 @@
+One page app built with Context API, Hooks and Material UI.
+Additionally, used material table - https://material-table.com/#/
+
+-- Additionally used NPM modules: --
+1. Axios
+2. cryptr
+
+-- Additional Features: --
+1. email validation;
+2. password encryption;
