@@ -4,7 +4,6 @@ import MaterialTable from "material-table";
 
 
 const useStyles = makeStyles({
-
     containerClass: {
         display: 'block',
         maxWidth: '90%',
@@ -13,7 +12,7 @@ const useStyles = makeStyles({
     }
 });
 
-const UserDashboard1 = () => {
+const SortableTable = () => {
     const classes = useStyles();
 
     const data = [
@@ -46,4 +45,4 @@ const UserDashboard1 = () => {
 }
 
 
-export default UserDashboard1;
+export default SortableTable;

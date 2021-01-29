@@ -1,15 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {AppContext, useAppContext} from '../contexts/AppContext';
+import {useAppContext} from '../contexts/AppContext';
 import MuiAlert from '@material-ui/lab/Alert';
 import {
-    FormControl, FormControlLabel, FormLabel,
+    FormControl,
     InputLabel,
-    MenuItem, Radio, RadioGroup,
+    MenuItem,
     Select
 } from "@material-ui/core";
+import Loading from "./general-components/Loading";
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -25,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+
+
     },
     containerStyle: {
         display: 'flex',
@@ -32,6 +35,15 @@ const useStyles = makeStyles((theme) => ({
         minHeight: 50,
         alignItems: 'center',
         flexDirection: "column",
+
+    },
+    formContainerStyle: {
+        maxWidth: 300,
+        width: '50%',
+        backgroundColor: '#fafafa',
+        borderRadius: 10,
+        boxShadow: '5px 5px 10px 5px #ccc',
+        paddingBottom: theme.spacing(2),
     },
     errorMessageArea: {
         margin: theme.spacing(5),
@@ -70,10 +82,13 @@ const selectGenders = [
 
 const sendUserRegistration = ({dispatch}, {username, password}) => {
     let userRegistrationPromise = new Promise((resolve, reject) => {
+
+        dispatch({type: 'SEND_REGISTER_USER', payload: {}});
+
         setTimeout(function () {
             resolve('User registered successfully');
             reject('Could not register user');
-        }, 300)
+        }, 1000)
     })
 
     userRegistrationPromise.then((response) => {
@@ -126,7 +141,7 @@ const Registration = () => {
             isInvalidGeneral: false,
             isInvalidEmail: false,
         })
-        const {username, password, email, gender} = userRegistrationFields;
+        const {username, password, email} = userRegistrationFields;
 
         e.preventDefault();
 
@@ -165,63 +180,66 @@ const Registration = () => {
         return <MenuItem {...props}/>
     });
 
-    return (
+    return state.loading ?
+        <Loading/> : (
         <div className={classes.containerStyle}>
-            <form className={classes.root} autoComplete="off">
-                <TextField
-                    error={registrationErrors.isInvalidGeneral}
-                    value={userRegistrationFields.username || ''}
-                    id="filled-basic"
-                    label="username"
-                    name="username"
-                    required
-                    onChange={e => handleChange(e)}
-                />
-                <TextField
-                    error={registrationErrors.isInvalidEmail}
-                    value={userRegistrationFields.email || ''}
-                    id="filled-basic"
-                    label="email"
-                    name="email"
-                    required
-                    onChange={e => handleChange(e)}
-                />
-                <TextField id="filled-basic"
-                           error={registrationErrors.isInvalidGeneral}
-                           value={userRegistrationFields.password || ''}
-                           label="password"
-                           name="password"
-                           type={'password'}
-                           required
-                           onChange={e => handleChange(e)}
-                />
-                <FormControl className={classes.formGenderStyle}>
-                    <InputLabel id="gender">Gender</InputLabel>
-                    <Select
-                        labelId="gender"
-                        id="gender"
-                        name="gender"
-                        value={userRegistrationFields.gender || ''}
-                        onChange={e => handleChange(e)}
-                    >
-                        {selectGenders.map(option => {
-                            const {value, label} = option;
-                            return (
-                                <CustomMenuItem key={value}
-                                                value={value}>
-                                    {label}
-                                </CustomMenuItem>
-                            )
-                        })
-                        }
-                    </Select>
-                </FormControl>
+          <div className={classes.formContainerStyle}>
+              <form className={classes.root} autoComplete="off" margin="normal">
+                  <TextField
+                      error={registrationErrors.isInvalidGeneral}
+                      value={userRegistrationFields.username || ''}
+                      id="filled-basic"
+                      label="username"
+                      name="username"
+                      required
+                      onChange={e => handleChange(e)}
+                  />
+                  <TextField
+                      error={registrationErrors.isInvalidEmail}
+                      value={userRegistrationFields.email || ''}
+                      id="filled-basic"
+                      label="email"
+                      name="email"
+                      required
+                      onChange={e => handleChange(e)}
+                  />
+                  <TextField id="filled-basic"
+                             error={registrationErrors.isInvalidGeneral}
+                             value={userRegistrationFields.password || ''}
+                             label="password"
+                             name="password"
+                             type={'password'}
+                             required
+                             onChange={e => handleChange(e)}
+                  />
+                  <FormControl className={classes.formGenderStyle}>
+                      <InputLabel id="gender">Gender</InputLabel>
+                      <Select
+                          labelId="gender"
+                          id="gender"
+                          name="gender"
+                          value={userRegistrationFields.gender || ''}
+                          onChange={e => handleChange(e)}
+                      >
+                          {selectGenders.map(option => {
+                              const {value, label} = option;
+                              return (
+                                  <CustomMenuItem key={value}
+                                                  value={value}>
+                                      {label}
+                                  </CustomMenuItem>
+                              )
+                          })
+                          }
+                      </Select>
+                  </FormControl>
 
-                <Button variant="contained" color="primary"
-                        onClick={handleSubmit} className={classes.buttonStyle}>
-                    Register
-                </Button>
-            </form>
+                  <Button variant="contained" color="primary"
+                          onClick={handleSubmit} className={classes.buttonStyle}>
+                      Register
+                  </Button>
+              </form>
+          </div>
 
             {
                 registrationErrors.isInvalidGeneral ?

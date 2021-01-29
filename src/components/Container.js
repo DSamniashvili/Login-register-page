@@ -1,12 +1,11 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import LoginPopup from "./LoginPopup";
-import UserDashboard from "./UserDashboard";
-import {AppContext, useAppContext} from "../contexts/AppContext";
+import {useAppContext} from "../contexts/AppContext";
 import Registration from "./Registration";
-import UserDashboard1 from "./UserDashboard1";
+import UserDashboardContainer from "./UserDashboardContainer";
 
 const Container = () => {
-    const {state, dispatch} = useAppContext()
+    const {state} = useAppContext()
 
     const renderContent = () => {
         if (!state.isRegistered) {
@@ -14,10 +13,7 @@ const Container = () => {
         }
         if (state.isAuth) {
             return (
-                <React.Fragment>
-                    <UserDashboard1/>
-                    <UserDashboard/>
-                </React.Fragment>
+                <UserDashboardContainer/>
             )
         } else {
             return <LoginPopup/>;

@@ -10,7 +10,6 @@ export const authenticationReducer = (state, action) => {
             case "FETCH_PROCESSING":
             return {
                 ...state,
-                loading: true,
                 userInfo: [],
             }
         case "FETCH_ERROR":
@@ -20,9 +19,16 @@ export const authenticationReducer = (state, action) => {
                 error: 'Something went wrong',
                 userInfo: [],
             }
+        case "SEND_AUTHENTICATE_USER":
+        case "SEND_REGISTER_USER":
+            return {
+                ...state,
+                loading: true,
+            }
         case "AUTHENTICATE_USER":
             return {
                 ...state,
+                loading: false,
                 isAuth: action.payload.isAuth,
             }
             case "REGISTER_USER":

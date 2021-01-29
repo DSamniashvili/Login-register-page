@@ -9,7 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        marginTop: theme.spacing(10),
+        marginTop: theme.spacing(20),
     },
     menuButton: {
         marginRight: theme.spacing(2),
