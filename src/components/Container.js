@@ -12,9 +12,7 @@ const Container = () => {
             return <Registration/>;
         }
         if (state.isAuth) {
-            return (
-                <UserDashboardContainer/>
-            )
+            return <UserDashboardContainer/>
         } else {
             return <LoginPopup/>;
         }

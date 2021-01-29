@@ -8,6 +8,7 @@ const initialState = {
     isRegistered: false,
     loading: false,
     error: '',
+    usersDataLoading: false,
     userInfo: [],
     loginInitials: {},
 }

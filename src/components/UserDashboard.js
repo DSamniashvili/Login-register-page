@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import {useAppContext} from "../contexts/AppContext";
 import axios from "axios";
 import Typography from "@material-ui/core/Typography";
+import {LinearProgress} from "@material-ui/core";
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -39,13 +40,19 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'flex-start',
         padding: theme.spacing(2),
     },
+    loading: {
+        color: '#333',
+        fontSize: 14,
+    }
 }));
 
 const getUsersTable = ({dispatch}) => {
     dispatch({type: 'FETCH_PROCESSING', payload: {}})
     axios.get('https://jsonplaceholder.typicode.com/users/')
         .then(response => {
-            dispatch({type: 'FETCH_SUCCESS', payload: response.data})
+            setTimeout(() => {
+                dispatch({type: 'FETCH_SUCCESS', payload: response.data})
+            }, 3000);
         })
         .catch(error => {
             dispatch({type: 'FETCH_ERROR', payload: 'Something went wrong'})
@@ -72,37 +79,42 @@ const UserDashboard = () => {
                 Dummy users' list
             </Typography>
 
-            <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="table">
-                    <TableHead>
-                        <TableRow>
-                            {
-                                tableHeading.map((item, index) => {
-                                    return <StyledTableCell key={index}>{item}</StyledTableCell>
-                                })
-                            }
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            state.userInfo &&
-                            Object.values(state.userInfo).map((row, index) => (
-                                <TableRow key={index}>
+            {
+                state.usersDataLoading ?
+                    <LinearProgress color={'primary'} /> :
+                    <TableContainer component={Paper}>
+                        <Table className={classes.table} aria-label="table">
+                            <TableHead>
+                                <TableRow>
                                     {
-                                        Object.values(row).map((item, index) => {
-                                            if (typeof item === 'object') {
-                                                return <TableCell key={index}>{Object.values(item)[0]}</TableCell>
-                                            }
-                                            return <TableCell key={index}>{item}</TableCell>
+                                        tableHeading.map((item, index) => {
+                                            return <StyledTableCell key={index}>{item}</StyledTableCell>
                                         })
                                     }
                                 </TableRow>
-                            ))
-                        }
+                            </TableHead>
+                            <TableBody>
+                                {
+                                    state.userInfo &&
+                                    Object.values(state.userInfo).map((row, index) => (
+                                        <TableRow key={index}>
+                                            {
+                                                Object.values(row).map((item, index) => {
+                                                    if (typeof item === 'object') {
+                                                        return <TableCell
+                                                            key={index}>{Object.values(item)[0]}</TableCell>
+                                                    }
+                                                    return <TableCell key={index}>{item}</TableCell>
+                                                })
+                                            }
+                                        </TableRow>
+                                    ))
+                                }
 
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+            }
         </div>
     )
 }

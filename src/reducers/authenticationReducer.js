@@ -3,19 +3,20 @@ export const authenticationReducer = (state, action) => {
         case "FETCH_SUCCESS":
             return {
                 ...state,
-                loading: false,
+                usersDataLoading: false,
                 error: '',
                 userInfo: action.payload,
             }
             case "FETCH_PROCESSING":
             return {
                 ...state,
+                usersDataLoading: true,
                 userInfo: [],
             }
         case "FETCH_ERROR":
             return {
                 ...state,
-                loading: false,
+                usersDataLoading: false,
                 error: 'Something went wrong',
                 userInfo: [],
             }
