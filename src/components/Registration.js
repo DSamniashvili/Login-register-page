@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {AppContext} from '../contexts/AppContext';
+import {AppContext, useAppContext} from '../contexts/AppContext';
 import MuiAlert from '@material-ui/lab/Alert';
 import {
     FormControl, FormControlLabel, FormLabel,
@@ -89,7 +89,7 @@ const sendUserRegistration = ({dispatch}, {username, password}) => {
 
 const Registration = () => {
     const classes = useStyles();
-    const {state, dispatch} = useContext(AppContext);
+    const {state, dispatch} = useAppContext()
 
     const [userRegistrationFields, setUserRegistrationFields] = useState({
         username: '',

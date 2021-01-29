@@ -1,4 +1,4 @@
-import React, {createContext, useReducer, useEffect} from "react";
+import React, {createContext, useReducer, useEffect, useContext} from "react";
 import {authenticationReducer} from "../reducers/authenticationReducer";
 
 export const AppContext = createContext();
@@ -41,3 +41,7 @@ const AppContextProvider = props => {
 }
 
 export default AppContextProvider;
+
+export function useAppContext(){
+    return useContext(AppContext);
+}

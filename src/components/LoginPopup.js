@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import {AppContext} from '../contexts/AppContext';
+import {AppContext, useAppContext} from '../contexts/AppContext';
 import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginForm = () => {
     const classes = useStyles();
-    const {state, dispatch} = useContext(AppContext);
+    const {state, dispatch} = useAppContext()
 
     const [isInvalid, setIsInvalid] = useState(false);
     const [userLoginInitials, setUserLoginInitials] = useState({

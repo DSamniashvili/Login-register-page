@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Loading from "./general-components/Loading";
-import {AppContext} from "../contexts/AppContext";
+import {AppContext, useAppContext} from "../contexts/AppContext";
 import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 
@@ -56,7 +56,8 @@ const getUsersTable = ({dispatch}) => {
 
 const UserDashboard = () => {
     const classes = useStyles();
-    const {state, dispatch} = useContext(AppContext);
+
+    const {state, dispatch} = useAppContext()
     let [tableHeading, setTableHeading] = useState([]);
 
     useEffect(() => {

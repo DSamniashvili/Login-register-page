@@ -5,7 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import {useContext} from "react";
-import {AppContext} from '../../contexts/AppContext';
+import {AppContext, useAppContext} from '../../contexts/AppContext';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
     const classes = useStyles();
-    const {state, dispatch} = useContext(AppContext);
+    const {state, dispatch} = useAppContext()
+
     const {isAuth, loginInitials} = state;
 
     const logoutUser = () => {
