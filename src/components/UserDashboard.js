@@ -23,7 +23,6 @@ const StyledTableCell = withStyles((theme) => ({
     },
 }))(TableCell);
 
-
 const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 650,
@@ -42,31 +41,31 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const getUsersTable = ({dispatch}) => {
+    dispatch({type: 'FETCH_PROCESSING', payload: {}})
+    axios.get('https://jsonplaceholder.typicode.com/users/')
+        .then(response => {
+            setTimeout(() => {
+                dispatch({type: 'FETCH_SUCCESS', payload: response.data})
+            }, 1000)
+        })
+        .catch(error => {
+            dispatch({type: 'FETCH_ERROR', payload: 'Something went wrong'})
+        })
+}
+
 const UserDashboard = () => {
     const classes = useStyles();
     const {state, dispatch} = useContext(AppContext);
     let [tableHeading, setTableHeading] = useState([]);
 
-
-    if(state.userInfo && state.userInfo.length > 0){
-        tableHeading = Object.keys(Object.assign({}, ...state.userInfo));
-    }
-
-
     useEffect(() => {
-        dispatch({type: 'FETCH_PROCESSING', payload: {}})
-        axios.get('https://jsonplaceholder.typicode.com/users/')
-            .then(response => {
-                setTimeout(() => {
-                    dispatch({type: 'FETCH_SUCCESS', payload: response.data})
-                }, 1000)
-            })
-            .catch(error => {
-                dispatch({type: 'FETCH_ERROR', payload: 'Something went wrong'})
-            })
-
+       getUsersTable({dispatch});
     }, []);
 
+    useEffect(() => {
+        setTableHeading(tableHeading = Object.keys(Object.assign({}, ...state.userInfo)));
+    }, [state.userInfo]);
 
     return state.loading ?
         <Loading/> : (
@@ -94,7 +93,7 @@ const UserDashboard = () => {
                                         {
                                             Object.values(row).map((item, index) => {
                                                 if(typeof item === 'object'){
-                                                    return  <TableCell key={index}>---</TableCell>
+                                                    return  <TableCell key={index}>{Object.values(item)[0]}</TableCell>
                                                 }
                                                 return <TableCell key={index}>{item}</TableCell>
                                             })

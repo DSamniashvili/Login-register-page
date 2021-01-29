@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
     },
     formGenderStyle: {
         display: 'flex',
-        // marginTop: 24,
     },
     genderLabelStyle: {
         display: 'flex',
@@ -69,41 +68,92 @@ const selectGenders = [
     },
 ];
 
+const sendUserRegistration = ({dispatch}, {username, password}) => {
+    let userRegistrationPromise = new Promise((resolve, reject) => {
+        setTimeout(function () {
+            resolve('User registered successfully');
+            reject('Could not register user');
+        }, 300)
+    })
+
+    userRegistrationPromise.then((response) => {
+        console.log("User registration response: " + response)
+        dispatch({type: 'SET_USER_INITIALS', payload: {username, password}});
+        dispatch({type: 'REGISTER_USER', payload: {isRegistered: true}});
+    })
+        .catch(err => {
+            console.log('User registration failed. ', err);
+            dispatch({type: 'REGISTER_USER', payload: {isRegistered: false}});
+        })
+}
+
 const Registration = () => {
     const classes = useStyles();
     const {state, dispatch} = useContext(AppContext);
 
+    const [userRegistrationFields, setUserRegistrationFields] = useState({
+        username: '',
+        password: '',
+        email: '',
+        gender: '',
+    });
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [gender, setGender] = useState('');
-    const [email, setEmail] = useState(false);
-    const [isInvalid, setIsInvalid] = useState(false);
-    const [isInvalidEmail, setIsInvalidEmail] = useState(false);
+    const [registrationErrors, setRegistrationErrors] = useState({
+        isInvalidGeneral: false,
+        isInvalidEmail: false,
+    });
 
     const ValidateEmail = (email) => {
         return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email);
     }
 
+    const handleChange = (event) => {
+        setUserRegistrationFields(state => ({
+            ...state,
+            [event.target.name]: event.target.value
+        }));
+    }
+
+    const handleRegistrationErrors = (errorType, value) => {
+        setRegistrationErrors(state => ({
+            ...state,
+            [errorType]: value,
+        }));
+    }
+
     const handleSubmit = (e) => {
+        setRegistrationErrors({
+            isInvalidGeneral: false,
+            isInvalidEmail: false,
+        })
+        const {username, password, email, gender} = userRegistrationFields;
+
         e.preventDefault();
 
-        if (!email || !ValidateEmail(email)) {
-            setIsInvalidEmail(true);
-        }
+        const inValidEmail = !email || !ValidateEmail(email);
+        const inValidName = !username || username.length === 0;
+        const inValidPassword = !password || password.length === 0;
 
-        if (!username || username.length === 0 || !password || password.length === 0) {
-            setUsername('');
-            setPassword('');
-            setIsInvalid(true);
-            dispatch({type: 'REGISTER_USER', payload: {isRegistered: false}});
+        if (inValidEmail || inValidName || inValidPassword) {
+            if (inValidEmail) {
+                setUserRegistrationFields({
+                    ...userRegistrationFields,
+                    email: '',
+                });
+
+                handleRegistrationErrors('isInvalidEmail', true);
+            }
+
+            if (inValidName || inValidPassword) {
+                setUserRegistrationFields({
+                    ...userRegistrationFields,
+                    username: '',
+                    password: '',
+                });
+                handleRegistrationErrors('isInvalidGeneral', true);
+            }
         } else {
-            dispatch({type: 'REGISTER_USER', payload: {isRegistered: true}});
-            dispatch({type: 'SET_USER_INITIALS', payload: {username, password}});
-            setUsername('');
-            setPassword('');
-            setEmail('');
-            setGender('');
+            sendUserRegistration({dispatch}, {username, password});
         }
     }
 
@@ -111,52 +161,59 @@ const Registration = () => {
         root: {
             color: '#303f9f',
         },
-    })((props) => <MenuItem {...props}/>);
-
-    const handleGenderChange = (event) => {
-        setGender(event.target.value);
-    };
+    })((props) => {
+        return <MenuItem {...props}/>
+    });
 
     return (
         <div className={classes.containerStyle}>
             <form className={classes.root} autoComplete="off">
                 <TextField
-                    error={isInvalid}
-                    value={username || ''}
+                    error={registrationErrors.isInvalidGeneral}
+                    value={userRegistrationFields.username || ''}
                     id="filled-basic"
-                    label="name"
+                    label="username"
+                    name="username"
                     required
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={e => handleChange(e)}
                 />
                 <TextField
-                    error={isInvalidEmail}
-                    value={email || ''}
+                    error={registrationErrors.isInvalidEmail}
+                    value={userRegistrationFields.email || ''}
                     id="filled-basic"
                     label="email"
+                    name="email"
                     required
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => handleChange(e)}
                 />
                 <TextField id="filled-basic"
-                           error={isInvalid}
-                           value={password || ''}
+                           error={registrationErrors.isInvalidGeneral}
+                           value={userRegistrationFields.password || ''}
                            label="password"
+                           name="password"
                            type={'password'}
                            required
-                           onChange={(e) => setPassword(e.target.value)}
+                           onChange={e => handleChange(e)}
                 />
                 <FormControl className={classes.formGenderStyle}>
                     <InputLabel id="gender">Gender</InputLabel>
                     <Select
                         labelId="gender"
                         id="gender"
-                        value={gender || ''}
-                        onChange={handleGenderChange}
+                        name="gender"
+                        value={userRegistrationFields.gender || ''}
+                        onChange={e => handleChange(e)}
                     >
-                        {selectGenders.map(option => (
-                            <CustomMenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </CustomMenuItem>
-                        ))}
+                        {selectGenders.map(option => {
+                            const {value, label} = option;
+                            return (
+                                <CustomMenuItem key={value}
+                                                value={value}>
+                                    {label}
+                                </CustomMenuItem>
+                            )
+                        })
+                        }
                     </Select>
                 </FormControl>
 
@@ -167,14 +224,14 @@ const Registration = () => {
             </form>
 
             {
-                isInvalid ?
+                registrationErrors.isInvalidGeneral ?
                     <div className={classes.errorMessageArea}>
                         <Alert severity="error">Please provide correct username & password.</Alert>
                     </div> :
                     null
             }
             {
-                isInvalidEmail ?
+                registrationErrors.isInvalidEmail ?
                     <div className={classes.errorMessageArea}>
                         <Alert severity="error">Please provide correct email address.</Alert>
                     </div> :

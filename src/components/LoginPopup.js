@@ -39,27 +39,54 @@ const LoginForm = () => {
     const classes = useStyles();
     const {state, dispatch} = useContext(AppContext);
 
-
-    const [inputUserName, setUsername] = useState('');
-    const [inputPassword, setPassword] = useState('');
     const [isInvalid, setIsInvalid] = useState(false);
+    const [userLoginInitials, setUserLoginInitials] = useState({
+        inputUserName: '',
+        inputPassword: '',
+    })
+
+    const handleChange = (event) => {
+        setUserLoginInitials(state => ({
+            ...state,
+            [event.target.name]: event.target.value
+        }));
+    }
+
+    const callToAuthenticate = ({inputUserName, inputPassword}) => {
+        const {username, password} = state.loginInitials;
+
+        let userLoginPromise = new Promise((resolve, reject) => {
+
+            if (!inputUserName || inputUserName.length === 0 || username !== inputUserName
+                || !inputPassword || inputPassword.length === 0 || password !== inputPassword) {
+                reject('Could not authenticate user');
+            }
+            setTimeout(function () {
+                resolve('User authenticated successfully');
+            }, 300)
+        })
+
+        userLoginPromise.then((response) => {
+            console.log("User Login response: " + response)
+            dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
+        })
+            .catch(err => {
+                console.log('User Login response: ', err);
+                setIsInvalid(true)
+                dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: false}});
+            })
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const {username, password} = state.loginInitials;
+        setUserLoginInitials({
+            inputUserName: '',
+            inputPassword: '',
+        });
 
-        if (!inputUserName || inputUserName.length === 0 || username !== inputUserName
-            || !inputPassword || inputPassword.length === 0 || password !== inputPassword) {
-            setUsername('');
-            setPassword('');
-            setIsInvalid(true);
-            dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: false}});
-        } else {
-            dispatch({type: 'AUTHENTICATE_USER', payload: {isAuth: true}});
-            setUsername('');
-            setPassword('');
-        }
+        const {inputUserName, inputPassword} = userLoginInitials;
+        callToAuthenticate({inputUserName, inputPassword});
     }
 
     return (
@@ -67,17 +94,19 @@ const LoginForm = () => {
             <form className={classes.root} noValidate autoComplete="off">
                 <TextField
                     error={isInvalid}
-                    value={inputUserName || ''}
+                    value={userLoginInitials.inputUserName || ''}
+                    name={'inputUserName'}
                     id="filled-basic"
                     label="name"
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={e => handleChange(e)}
                 />
                 <TextField id="filled-basic"
                            error={isInvalid}
-                           value={inputPassword || ''}
+                           value={userLoginInitials.inputPassword || ''}
                            label="password"
+                           name={"inputPassword"}
                            type={'password'}
-                           onChange={(e) => setPassword(e.target.value)}
+                           onChange={e => handleChange(e)}
                 />
 
                 <Button variant="contained" color="primary"
